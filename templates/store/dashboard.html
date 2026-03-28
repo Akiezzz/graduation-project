@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}商家中心 · {{ store.name }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+  <div>
+    <h2 style="margin:0">{{ store.name }}</h2>
+    <p style="color:var(--text-3);margin:4px 0 0">{{ store.description }}</p>
+  </div>
+  <a href="/store/{{ store.id }}/products/" class="btn btn-primary">管理商品</a>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card"><h3>{{ total_products }}</h3><p>全部商品</p></div>
+  <div class="stat-card"><h3>{{ active_products }}</h3><p>在售商品</p></div>
+  <div class="stat-card"><h3>{{ total_orders }}</h3><p>相关订单</p></div>
+</div>
+
+<div class="section" style="margin-top:24px">
+  <a href="/store/{{ store.id }}/products/" class="btn">商品管理</a>
+  <a href="/store/{{ store.id }}/orders/" class="btn">订单查看</a>
+</div>
+{% endblock %}

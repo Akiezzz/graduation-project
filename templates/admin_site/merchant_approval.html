@@ -1,0 +1,31 @@
+{% extends 'base_admin.html' %}
+{% block title %}商家审核{% endblock %}
+{% block content %}
+<h2>待审核商家</h2>
+{% if merchants %}
+  <table class="table">
+    <thead><tr><th>店铺名</th><th>用户</th><th>描述</th><th>申请时间</th><th>操作</th></tr></thead>
+    <tbody>
+      {% for m in merchants %}
+        <tr>
+          <td>{{ m.shop_name }}</td>
+          <td>{{ m.user.username }}</td>
+          <td>{{ m.description }}</td>
+          <td>{{ m.created_at|date:"Y-m-d" }}</td>
+          <td>
+            <form method="post" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="merchant_id" value="{{ m.id }}">
+              <button name="action" value="approve" class="btn btn-sm btn-primary">通过</button>
+              <button name="action" value="reject" class="btn btn-sm btn-danger" onclick="return confirm('确认拒绝?')">拒绝</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>暂无待审核商家</p>
+{% endif %}
+<a href="/manage/dashboard/" class="btn">返回</a>
+{% endblock %}

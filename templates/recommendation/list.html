@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}为您推荐 · 购物平台{% endblock %}
+{% block content %}
+<div class="page-header"><h1>为您推荐</h1><p>根据您的浏览记录精选商品</p></div>
+<div class="product-grid">
+  {% for p in products %}
+    <div class="product-card">
+      {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">
+      {% else %}<div class="no-img">暂无图片</div>{% endif %}
+      <div class="product-info">
+        <div class="product-tags"><span class="tag">推荐</span></div>
+        <h3><a href="/products/{{ p.id }}/">{{ p.name }}</a></h3>
+        <p class="price">¥{{ p.price }}</p>
+        <a href="/order/cart/add/{{ p.id }}/" class="btn btn-primary btn-sm" style="width:100%;margin-top:4px">加入购物车</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-icon">✨</div>
+      <p>浏览更多商品后，将为您个性化推荐</p>
+      <a href="/products/" class="btn btn-primary">去逛逛</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base_merchant.html' %}
+{% block title %}申请开店{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:0 auto">
+  <div class="page-header"><h1>申请开店</h1><p>填写店铺信息，提交审核后即可开始销售</p></div>
+  <div style="background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:28px">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>店铺名称</label>
+        <input type="text" name="shop_name" placeholder="给您的店铺起个名字" required>
+      </div>
+      <div class="form-group">
+        <label>店铺描述 <span style="color:var(--text-3);font-weight:400">（选填）</span></label>
+        <textarea name="description" rows="3" placeholder="介绍您的店铺经营范围、特色..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" style="height:42px;font-size:15px">提交申请</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

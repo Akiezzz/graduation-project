@@ -1,0 +1,36 @@
+# Django E-commerce Platform - 依赖清单
+
+# Web 框架
+Django==3.2.25
+djangorestframework==3.14.0
+
+# Redis 缓存
+django-redis==5.4.0
+redis==5.0.1
+
+# 数据处理（离线评估）
+pandas==2.0.3
+numpy==1.24.3
+
+# 机器学习（可选，用于更高级的评估）
+scikit-learn==1.3.0
+
+# 深度学习（P3 阶段）
+torch==1.13.1
+torchtext==0.14.1
+
+# 中文 NLP
+jieba==0.42.1
+
+# 训练辅助
+tqdm==4.66.1
+
+# 图像处理（可选，商品图片处理）
+Pillow==10.0.0
+
+# 数据库驱动（生产环境）
+# mysqlclient==2.2.0  # MySQL（取消注释以使用）
+# psycopg2-binary==2.9.7  # PostgreSQL（取消注释以使用）
+
+# 开发工具
+django-debug-toolbar==4.2.0

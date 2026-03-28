@@ -1,0 +1,55 @@
+{% extends 'base_admin.html' %}
+{% block title %}商品管理 · 管理后台{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <h2 style="margin:0">商品管理</h2>
+  <a href="/manage/dashboard/" class="btn">← 返回后台</a>
+</div>
+
+<form method="get" style="margin-bottom:20px;display:flex;gap:10px;max-width:400px">
+  <input type="text" name="q" placeholder="搜索商品名称..." value="{{ q }}" style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px">
+  <button type="submit" class="btn btn-primary">搜索</button>
+</form>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>商品</th><th>所属店铺</th><th>价格</th><th>库存</th><th>状态</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            {% if product.image %}<img src="{{ product.image.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:4px">{% endif %}
+            <span>{{ product.name }}</span>
+          </div>
+        </td>
+        <td>{{ product.store.name }}</td>
+        <td style="color:var(--red);font-weight:600">¥{{ product.price }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          {% if product.product_status == 'active' %}<span class="badge badge-completed">销售中</span>
+          {% elif product.product_status == 'inactive' %}<span class="badge badge-cancelled">已下架</span>
+          {% else %}<span class="badge badge-pending">违规下架</span>{% endif %}
+        </td>
+        <td>
+          <form method="post" style="display:inline">{% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            {% if product.product_status == 'active' %}
+              <button type="submit" name="action" value="violate" class="btn btn-sm" style="background:var(--red);color:#fff;border-color:var(--red)" onclick="return confirm('确定强制下架此商品？')">强制下架</button>
+            {% elif product.product_status == 'violated' %}
+              <button type="submit" name="action" value="restore" class="btn btn-sm btn-primary">恢复上架</button>
+            {% else %}
+              <span style="color:var(--text-3);font-size:13px">商家已下架</span>
+            {% endif %}
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:40px">暂无商品</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

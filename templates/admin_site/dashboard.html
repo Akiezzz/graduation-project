@@ -1,0 +1,16 @@
+{% extends 'base_admin.html' %}
+{% block title %}管理后台{% endblock %}
+{% block content %}
+<h2>管理后台</h2>
+<div class="dashboard-stats">
+  <div class="stat-card"><h3>{{ user_count }}</h3><p>用户数</p></div>
+  <div class="stat-card"><h3>{{ product_count }}</h3><p>商品数</p></div>
+  <div class="stat-card"><h3>{{ order_count }}</h3><p>订单数</p></div>
+  <div class="stat-card"><h3>{{ store_count }}</h3><p>店铺数</p></div>
+</div>
+<div class="section">
+  <a href="/manage/stores/" class="btn btn-primary">店铺审核</a>
+  <a href="/manage/products/" class="btn">商品管理</a>
+  <a href="/admin/" class="btn">Django管理后台</a>
+</div>
+{% endblock %}

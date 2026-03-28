@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}管理后台{% endblock %} · 购物平台</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="admin-body">
+<nav class="navbar navbar-admin">
+  <div class="container nav-inner">
+    <a href="/manage/dashboard/" class="logo">⚙ 管理后台</a>
+    <div class="nav-links">
+      <a href="/manage/dashboard/">数据概览</a>
+      <a href="/manage/stores/">店铺审核</a>
+      <a href="/manage/products/">商品管理</a>
+      <a href="/admin/">Django Admin</a>
+      <a href="/" target="_blank">用户端 ↗</a>
+      <span class="nav-user-name">
+        <span class="nav-avatar" style="background:rgba(64,150,255,.2);color:#4096ff">{{ user.username|slice:":1"|upper }}</span>
+        {{ user.username }}
+      </span>
+      <a href="/user/logout/">退出</a>
+    </div>
+  </div>
+</nav>
+<div class="container main-content">
+  {% if messages %}{% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+  {% endfor %}{% endif %}
+  {% block content %}{% endblock %}
+</div>
+<footer class="footer footer-admin">
+  <div class="container footer-inner">
+    <span class="footer-brand">平台管理后台</span>
+    <span class="footer-copy">购物平台 · 管理版</span>
+  </div>
+</footer>
+</body>
+</html>

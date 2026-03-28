@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} · 购物平台{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+  <a href="/">首页</a><span>/</span>
+  <a href="/products/">商品</a><span>/</span>
+  {% if product.category %}<a href="/products/?category={{ product.category.id }}">{{ product.category.name }}</a><span>/</span>{% endif %}
+  {{ product.name }}
+</div>
+
+<div class="detail-layout">
+  <div class="detail-img">
+    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% else %}<div class="no-img large">暂无图片</div>{% endif %}
+  </div>
+  <div class="detail-info">
+    <h1>{{ product.name }}</h1>
+    <div style="background:var(--blue-pale);border-radius:10px;padding:16px 20px;margin-bottom:20px">
+      <div class="price-large">{{ product.price }}</div>
+    </div>
+    <div class="detail-meta">
+      <span>库存 <strong>{{ product.stock }}</strong></span>
+      <span>销量 <strong>{{ product.sales }}</strong></span>
+      {% if product.store %}<span>店铺 <strong>{{ product.store.name }}</strong></span>{% endif %}
+      {% if product.category %}<span>分类 <strong>{{ product.category.name }}</strong></span>{% endif %}
+    </div>
+    {% if product.description %}
+      <div class="desc">{{ product.description }}</div>
+    {% endif %}
+    <div class="detail-actions">
+      {% if product.stock > 0 %}
+        <a href="/order/cart/add/{{ product.id }}/" class="btn btn-primary" style="padding:10px 32px;font-size:15px">🛒 加入购物车</a>
+      {% else %}
+        <span class="btn-disabled">已售罄</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<section class="section" id="recommendation-section">
+  <h2 class="section-title">猜你喜欢</h2>
+  <div id="recommendation-list" class="product-grid">
+    <div class="empty-state" style="grid-column:1/-1"><p>正在加载推荐...</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">商品评价 <span style="font-size:13px;font-weight:400;color:var(--text-3)">({{ reviews.count }})</span></h2>
+  {% if user.is_authenticated %}
+    <div class="review-form">
+      <h4>写评价</h4>
+      <form method="post" action="/products/{{ product.id }}/review/">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>评分</label>
+          <select name="rating" style="width:auto">
+            {% for i in "12345" %}<option value="{{ i }}">{{ i }} 星</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <textarea name="content" placeholder="分享您的使用体验..." rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">提交评价</button>
+      </form>
+    </div>
+  {% endif %}
+  {% for r in reviews %}
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-user">{{ r.user.username }}</span>
+        <span class="stars">{% for i in "12345" %}{% if forloop.counter <= r.rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+        <span class="review-date">{{ r.created_at|date:"Y-m-d" }}</span>
+      </div>
+      <p class="review-content">{{ r.content }}</p>
+    </div>
+  {% empty %}
+    <div class="empty-state"><div class="empty-icon">💬</div><p>暂无评价，快来抢先评价吧</p></div>
+  {% endfor %}
+</section>
+<script>
+(function () {
+  var container = document.getElementById('recommendation-list');
+  if (!container) return;
+
+  function render(items) {
+    if (!items || items.length === 0) {
+      container.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>暂无推荐，去逛逛更多商品吧</p></div>';
+      return;
+    }
+    var html = items.map(function (item) {
+      var image = item.image ? '<img src="' + item.image + '" alt="' + item.name + '">' : '<div class="no-img">暂无图片</div>';
+      return '<div class="product-card">' +
+        image +
+        '<div class="product-info">' +
+        '<div class="product-tags"><span class="tag">' + item.reason + '</span></div>' +
+        '<h3><a href="/products/' + item.id + '/">' + item.name + '</a></h3>' +
+        '<p class="price">¥' + item.price + '</p>' +
+        '<a href="/order/cart/add/' + item.id + '/" class="btn btn-primary btn-sm" style="width:100%;margin-top:4px">加入购物车</a>' +
+        '</div></div>';
+    }).join('');
+    container.innerHTML = html;
+  }
+
+  fetch('/api/recommendations/?limit=6&scene=detail', { credentials: 'same-origin' })
+    .then(function (res) {
+      if (!res.ok) throw new Error('request failed');
+      return res.json();
+    })
+    .then(function (data) { render(data.items || []); })
+    .catch(function () {
+      container.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>推荐加载失败，请稍后重试</p></div>';
+    });
+})();
+</script>
+{% endblock %}

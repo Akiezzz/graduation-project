@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}确认订单 · 购物平台{% endblock %}
+{% block content %}
+<div class="page-header"><h1>确认订单</h1></div>
+<div class="checkout-layout">
+  <div>
+    <div class="checkout-section">
+      <h3>商品清单</h3>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th></tr></thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    {% if item.product.image %}<img src="{{ item.product.image.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:5px">{% endif %}
+                    {{ item.product.name }}
+                  </div>
+                </td>
+                <td>¥{{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td style="color:var(--red);font-weight:600">¥{{ item.product.price }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="checkout-section">
+      <h3>收货信息</h3>
+      <form method="post" id="checkout-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>收货地址</label>
+          <textarea name="address" rows="2" required placeholder="请填写详细收货地址">{{ user.address }}</textarea>
+        </div>
+        <div class="form-group">
+          <label>备注 <span style="color:var(--text-3);font-weight:400">（选填）</span></label>
+          <input type="text" name="remark" placeholder="如：请放门口">
+        </div>
+      </form>
+    </div>
+  </div>
+  <div>
+    <div class="cart-summary" style="position:sticky;top:84px">
+      <h3>订单摘要</h3>
+      <div style="font-size:13px;color:var(--text-3);margin-bottom:12px">共 {{ items|length }} 件商品</div>
+      <div class="cart-total">¥{{ total }}<small> 合计</small></div>
+      <button type="submit" form="checkout-form" class="btn btn-primary btn-block" style="height:42px;font-size:15px">提交订单</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

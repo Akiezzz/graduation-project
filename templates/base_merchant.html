@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}商家中心{% endblock %} · 购物平台</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="merchant-body">
+<nav class="navbar navbar-merchant">
+  <div class="container nav-inner">
+    <a href="/merchant/dashboard/" class="logo">🏪 商家中心</a>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/">控制台</a>
+      <a href="/merchant/products/add/" class="nav-btn">+ 发布商品</a>
+      <a href="/" target="_blank">前往用户端 ↗</a>
+      <span class="nav-user-name">
+        <span class="nav-avatar" style="background:#e6fff0;color:#00b96b">{{ user.username|slice:":1"|upper }}</span>
+        {{ user.username }}
+      </span>
+      <a href="/user/logout/">退出</a>
+    </div>
+  </div>
+</nav>
+<div class="container main-content">
+  {% if messages %}{% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+  {% endfor %}{% endif %}
+  {% block content %}{% endblock %}
+</div>
+<footer class="footer footer-merchant">
+  <div class="container footer-inner">
+    <span class="footer-brand">商家管理中心</span>
+    <span class="footer-copy">购物平台 · 商家版</span>
+  </div>
+</footer>
+</body>
+</html>

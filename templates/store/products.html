@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}商品管理 · {{ store.name }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <h2 style="margin:0">商品管理 · {{ store.name }}</h2>
+  <div style="display:flex;gap:10px">
+    <a href="/store/{{ store.id }}/dashboard/" class="btn">← 商家中心</a>
+    <a href="/products/add/?store={{ store.id }}" class="btn btn-primary">+ 添加商品</a>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>商品</th><th>价格</th><th>库存</th><th>销量</th><th>状态</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            {% if product.image %}<img src="{{ product.image.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:4px">{% endif %}
+            <div>
+              <div style="font-weight:500">{{ product.name }}</div>
+              {% if product.keywords %}<div style="font-size:12px;color:var(--text-3)">{{ product.keywords }}</div>{% endif %}
+            </div>
+          </div>
+        </td>
+        <td style="color:var(--red);font-weight:600">¥{{ product.price }}</td>
+        <td>{{ product.stock }}</td>
+        <td>{{ product.sales }}</td>
+        <td>
+          {% if product.product_status == 'active' %}<span class="badge badge-completed">销售中</span>
+          {% elif product.product_status == 'inactive' %}<span class="badge badge-cancelled">已下架</span>
+          {% else %}<span class="badge badge-pending">违规下架</span>{% endif %}
+        </td>
+        <td>
+          <a href="/products/{{ product.id }}/edit/" class="btn btn-sm">编辑</a>
+          {% if product.product_status != 'violated' %}
+          <form method="post" style="display:inline">{% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            {% if product.product_status == 'active' %}
+              <button type="submit" name="action" value="inactive" class="btn btn-sm" style="background:var(--red);color:#fff;border-color:var(--red)" onclick="return confirm('确定下架此商品？')">下架</button>
+            {% else %}
+              <button type="submit" name="action" value="active" class="btn btn-sm btn-primary">上架</button>
+            {% endif %}
+          </form>
+          {% else %}
+          <span style="color:var(--text-3);font-size:12px">违规下架</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:40px">暂无商品，<a href="/products/add/?store={{ store.id }}">立即添加</a></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

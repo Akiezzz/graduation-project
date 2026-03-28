@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}订单 #{{ order.id }} · 购物平台{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="/order/orders/">我的订单</a><span>/</span>订单 #{{ order.id }}</div>
+<div class="page-header">
+  <h1>订单详情</h1>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start">
+  <div>
+    <div class="order-info-card">
+      <h3>订单信息</h3>
+      <div class="order-info-row"><span class="order-info-label">订单编号</span><span class="order-info-value">#{{ order.id }}</span></div>
+      <div class="order-info-row"><span class="order-info-label">订单状态</span><span class="order-info-value"><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></span></div>
+      <div class="order-info-row"><span class="order-info-label">下单时间</span><span class="order-info-value">{{ order.created_at|date:"Y-m-d H:i" }}</span></div>
+      <div class="order-info-row"><span class="order-info-label">收货地址</span><span class="order-info-value">{{ order.address }}</span></div>
+      {% if order.remark %}<div class="order-info-row"><span class="order-info-label">备注</span><span class="order-info-value">{{ order.remark }}</span></div>{% endif %}
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th></tr></thead>
+        <tbody>
+          {% for item in order.items.all %}
+            <tr>
+              <td><a href="/products/{{ item.product.id }}/">{{ item.product.name }}</a></td>
+              <td>¥{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td style="color:var(--red);font-weight:600">¥{{ item.price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cart-summary" style="position:sticky;top:84px">
+    <h3>订单金额</h3>
+    <div class="cart-total">¥{{ order.total_price }}<small> 合计</small></div>
+    {% if order.status == 'pending' %}
+      <form method="post" action="/order/orders/{{ order.id }}/pay/">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block" style="margin-bottom:8px">模拟支付</button>
+      </form>
+      <form method="post" action="/order/orders/{{ order.id }}/cancel/">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('确认取消此订单？')" style="margin-bottom:8px">取消订单</button>
+      </form>
+    {% endif %}
+    <a href="/order/orders/" class="btn btn-block">返回订单列表</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}首页 · 购物平台{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>发现好物，轻松购买</h1>
+  <p>精选优质商品，品质保障，快速配送</p>
+  <a href="/products/" class="btn btn-primary">立即逛逛</a>
+</section>
+
+{% if categories %}
+<section class="section">
+  <h2 class="section-title">全部分类</h2>
+  <div class="category-grid">
+    {% for cat in categories %}
+      <a href="/products/?category={{ cat.id }}" class="category-card">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title" style="margin-bottom:0">热销榜单</h2>
+    <a href="/products/" class="btn btn-ghost btn-sm">查看全部 →</a>
+  </div>
+  <div class="product-grid">
+    {% for p in featured %}
+      <div class="product-card">
+        {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">
+        {% else %}<div class="no-img">暂无图片</div>{% endif %}
+        <div class="product-info">
+          <div class="product-tags"><span class="tag tag-red">热销</span></div>
+          <h3><a href="/products/{{ p.id }}/">{{ p.name }}</a></h3>
+          <p class="price">¥{{ p.price }}</p>
+          <p class="sales">已售 {{ p.sales }}</p>
+          <a href="/order/cart/add/{{ p.id }}/" class="btn btn-primary btn-sm" style="width:100%;margin-top:4px">加入购物车</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🛍</div><p>暂无商品，等待商家入驻</p></div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title" style="margin-bottom:0">最新上架</h2>
+    <a href="/products/" class="btn btn-ghost btn-sm">查看全部 →</a>
+  </div>
+  <div class="product-grid">
+    {% for p in new_arrivals %}
+      <div class="product-card">
+        {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">
+        {% else %}<div class="no-img">暂无图片</div>{% endif %}
+        <div class="product-info">
+          <div class="product-tags"><span class="tag">新品</span></div>
+          <h3><a href="/products/{{ p.id }}/">{{ p.name }}</a></h3>
+          <p class="price">¥{{ p.price }}</p>
+          <a href="/order/cart/add/{{ p.id }}/" class="btn btn-primary btn-sm" style="width:100%;margin-top:4px">加入购物车</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base_merchant.html' %}
+{% block title %}商家控制台{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ merchant.shop_name }}</h1>
+  <p>欢迎回来，{{ user.username }}</p>
+</div>
+
+{% if not merchant.is_approved %}
+  <div class="alert alert-warning">您的店铺正在审核中，审核通过后即可发布商品</div>
+{% endif %}
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-blue">📦</div>
+    <div class="stat-body"><h3>{{ products.count }}</h3><p>在售商品</p></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-green">📋</div>
+    <div class="stat-body"><h3>{{ orders.count }}</h3><p>近期订单</p></div>
+  </div>
+</div>
+
+{% if merchant.is_approved %}
+<div class="section-header" style="margin-bottom:16px">
+  <h2 class="section-title" style="margin-bottom:0">我的商品</h2>
+  <a href="/merchant/products/add/" class="btn btn-primary btn-sm">+ 添加商品</a>
+</div>
+<div class="table-wrap" style="margin-bottom:28px">
+  <table class="table">
+    <thead><tr><th>商品名称</th><th>价格</th><th>库存</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+      {% for p in products %}
+        <tr>
+          <td style="font-weight:500">{{ p.name }}</td>
+          <td style="color:var(--red);font-weight:600">¥{{ p.price }}</td>
+          <td>{{ p.stock }}</td>
+          <td>
+            {% if p.is_active %}
+              <span class="badge badge-completed">上架中</span>
+            {% else %}
+              <span class="badge badge-cancelled">已下架</span>
+            {% endif %}
+          </td>
+          <td><a href="/merchant/products/{{ p.id }}/edit/" class="btn btn-sm">编辑</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" style="text-align:center;color:var(--text-3);padding:32px">暂无商品，<a href="/merchant/products/add/">立即添加</a></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<h2 class="section-title">近期订单</h2>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>订单号</th><th>状态</th><th>金额</th><th>时间</th></tr></thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td style="font-weight:600">#{{ order.id }}</td>
+          <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+          <td style="color:var(--red);font-weight:600">¥{{ order.total_price }}</td>
+          <td style="color:var(--text-3)">{{ order.created_at|date:"Y-m-d" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:32px">暂无订单</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

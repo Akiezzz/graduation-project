@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}购物车 · 购物平台{% endblock %}
+{% block content %}
+<div class="page-header"><h1>我的购物车</h1></div>
+{% if items %}
+<div class="cart-layout">
+  <div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th><th>操作</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  {% if item.product.image %}<img src="{{ item.product.image.url }}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">{% endif %}
+                  <a href="/products/{{ item.product.id }}/" style="font-weight:500">{{ item.product.name }}</a>
+                </div>
+              </td>
+              <td style="color:var(--red);font-weight:600">¥{{ item.product.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td style="color:var(--red);font-weight:700">¥{{ item.product.price }}</td>
+              <td><a href="/order/cart/remove/{{ item.id }}/" class="btn btn-sm btn-danger">删除</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="cart-summary">
+    <h3>订单摘要</h3>
+    <div style="font-size:13px;color:var(--text-3);margin-bottom:12px">共 {{ items|length }} 件商品</div>
+    <div class="cart-total">¥{{ total }}<small> 合计</small></div>
+    <a href="/order/checkout/" class="btn btn-primary btn-block" style="height:42px;font-size:15px">去结算</a>
+    <a href="/products/" class="btn btn-block" style="margin-top:8px">继续购物</a>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">🛒</div>
+  <p>购物车还是空的</p>
+  <a href="/products/" class="btn btn-primary">去逛逛</a>
+</div>
+{% endif %}
+{% endblock %}

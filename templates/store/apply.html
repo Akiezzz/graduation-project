@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}申请开店 · 购物平台{% endblock %}
+{% block content %}
+<div style="max-width:600px;margin:40px auto">
+  <div class="card" style="padding:32px">
+    <h2 style="margin-bottom:8px">申请开设店铺</h2>
+    <p style="color:var(--text-3);margin-bottom:24px">填写以下信息，提交后等待管理员审核（通常1-3个工作日）</p>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>店铺名称 <span style="color:var(--red)">*</span></label>
+        <input type="text" name="name" required maxlength="100" placeholder="请输入店铺名称">
+      </div>
+      <div class="form-group">
+        <label>店铺简介</label>
+        <textarea name="description" rows="3" placeholder="简单介绍您的店铺..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>联系人 <span style="color:var(--red)">*</span></label>
+        <input type="text" name="contact_person" required maxlength="50" placeholder="请输入联系人姓名">
+      </div>
+      <div class="form-group">
+        <label>联系电话 <span style="color:var(--red)">*</span></label>
+        <input type="tel" name="contact_phone" required maxlength="20" placeholder="请输入联系电话">
+      </div>
+      <div class="form-group">
+        <label>营业执照号 <span style="color:var(--red)">*</span></label>
+        <input type="text" name="license_number" required maxlength="50" placeholder="请输入营业执照注册号">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">提交申请</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

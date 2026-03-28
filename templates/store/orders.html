@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}店铺订单 · {{ store.name }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <h2 style="margin:0">店铺订单 · {{ store.name }}</h2>
+  <a href="/store/{{ store.id }}/dashboard/" class="btn">← 商家中心</a>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>订单号</th><th>买家</th><th>金额</th><th>状态</th><th>下单时间</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.user.username }}</td>
+        <td style="color:var(--red);font-weight:600">¥{{ order.total_price }}</td>
+        <td>
+          {% if order.status == 'pending' %}<span class="badge badge-pending">待付款</span>
+          {% elif order.status == 'paid' %}<span class="badge badge-paid">已付款</span>
+          {% elif order.status == 'shipped' %}<span class="badge badge-shipped">已发货</span>
+          {% elif order.status == 'completed' %}<span class="badge badge-completed">已完成</span>
+          {% else %}<span class="badge badge-cancelled">已取消</span>{% endif %}
+        </td>
+        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+        <td><a href="/order/orders/{{ order.id }}/" class="btn btn-sm">查看</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:40px">暂无订单</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

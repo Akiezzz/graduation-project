@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}添加商品 · {{ store.name }}{% endblock %}
+{% block content %}
+<div style="max-width:700px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <a href="/store/{{ store.id }}/products/" class="btn">← 返回商品管理</a>
+    <h2 style="margin:0">添加商品</h2>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="card" style="padding:24px">
+    {% csrf_token %}
+    <input type="hidden" name="store_id" value="{{ store.id }}">
+
+    <div class="form-group">
+      <label>商品名称 <span style="color:var(--red)">*</span></label>
+      <input type="text" name="name" required>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group">
+        <label>价格 <span style="color:var(--red)">*</span></label>
+        <input type="number" name="price" step="0.01" min="0" required>
+      </div>
+      <div class="form-group">
+        <label>库存</label>
+        <input type="number" name="stock" min="0" value="0">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>分类</label>
+      <select name="category">
+        <option value="">-- 不选分类 --</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>关键词</label>
+      <input type="text" name="keywords" placeholder="多个关键词用空格分隔">
+    </div>
+
+    <div class="form-group">
+      <label>商品描述</label>
+      <textarea name="description" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>商品图片</label>
+      <input type="file" name="image" accept="image/*">
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width:100%">添加商品</button>
+  </form>
+</div>
+{% endblock %}

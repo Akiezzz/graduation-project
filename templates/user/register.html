@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}注册 · 购物平台{% endblock %}
+{% block content %}
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-title">创建账号</div>
+    <div class="form-card-sub">加入购物平台，发现更多好物</div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" name="username" placeholder="设置用户名" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" name="password" placeholder="设置密码（至少6位）" required>
+      </div>
+      <div class="form-group">
+        <label>邮箱 <span style="color:var(--text-3);font-weight:400">（选填）</span></label>
+        <input type="email" name="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>手机号 <span style="color:var(--text-3);font-weight:400">（选填）</span></label>
+        <input type="text" name="phone" placeholder="请输入手机号">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" style="height:42px;font-size:15px;margin-top:4px">注册</button>
+    </form>
+    <p class="form-footer">已有账号？<a href="/user/login/">立即登录</a></p>
+  </div>
+</div>
+{% endblock %}

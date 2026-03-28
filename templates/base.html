@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}购物平台{% endblock %}</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#1677ff"/><path d="M7 10h14M9 10V8a5 5 0 0110 0v2M10 18h8M14 14v4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+      购物平台
+    </a>
+    <div class="nav-search">
+      <form action="/products/" method="get">
+        <input type="text" name="q" placeholder="搜索商品、品牌..." value="{{ request.GET.q }}">
+        <button type="submit">搜索</button>
+      </form>
+    </div>
+    <div class="nav-links">
+      {% if user.is_authenticated %}
+        <a href="/order/cart/">🛒 购物车</a>
+        <a href="/order/orders/">我的订单</a>
+        <a href="/recommendations/">推荐</a>
+        {% if user.is_staff %}<a href="/manage/dashboard/">管理后台</a>{% endif %}
+        {% if user.is_store_owner %}
+          <a href="/store/{{ user.store_profile.id }}/dashboard/">商家中心</a>
+        {% else %}
+          <a href="/store/apply/">开店</a>
+        {% endif %}
+        <span class="nav-user-name">
+          <span class="nav-avatar">{{ user.username|slice:":1"|upper }}</span>
+          <a href="/user/profile/">{{ user.username }}</a>
+        </span>
+        <a href="/user/logout/">退出</a>
+      {% else %}
+        <a href="/user/login/">登录</a>
+        <a href="/user/register/" class="nav-btn">免费注册</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="container main-content">
+  {% if messages %}{% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+  {% endfor %}{% endif %}
+  {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span class="footer-brand">购物平台</span>
+    <span class="footer-copy">© 2024 购物平台 · 基于 Django 开发</span>
+  </div>
+</footer>
+
+<!-- 购物车悬浮按钮 -->
+{% if user.is_authenticated %}
+<a href="/order/cart/" class="cart-float-btn">
+  <svg class="cart-icon-svg" viewBox="0 0 24 24">
+    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+  </svg>
+  <span class="cart-badge">0</span>
+</a>
+{% endif %}
+
+<!-- JavaScript -->
+<script src="/static/js/cart-animation.js"></script>
+<script src="/static/js/payment-modal.js"></script>
+</body>
+</html>

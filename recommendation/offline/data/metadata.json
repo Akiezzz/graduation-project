@@ -1,0 +1,9 @@
+{
+  "split_date": "2026-03-28T07:02:19.971472+00:00",
+  "total_users": 6,
+  "total_products": 19,
+  "total_interactions": 6,
+  "train_interactions": 6,
+  "test_interactions": 0,
+  "exported_at": "2026-03-28T15:02:19.980449"
+}

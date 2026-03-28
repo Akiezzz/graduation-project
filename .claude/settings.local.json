@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py makemigrations)",
+      "Bash(python manage.py migrate)",
+      "Bash(python manage.py check)",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import django; print\\(django.__version__\\)\")",
+      "Bash(python -c \"import rest_framework; print\\(rest_framework.__version__\\)\")",
+      "Bash(xargs grep:*)",
+      "Bash(python \"d:/AAAAAAAAAAAAAAAAAAAAA WORK/毕业论文/项目/manage.py\" shell -c \"from product.models import Category; print\\(list\\(Category.objects.filter\\(parent=None\\).values_list\\(''id'',''name''\\)\\)\\)\")",
+      "Bash(python \"d:/AAAAAAAAAAAAAAAAAAAAA WORK/毕业论文/项目/manage.py\" check)",
+      "Bash(python \"d:/AAAAAAAAAAAAAAAAAAAAA WORK/毕业论文/项目/manage.py\" test recommendation)",
+      "Bash(python manage.py test --verbosity=1)",
+      "Bash(python manage.py startapp store)",
+      "Bash(python manage.py makemigrations store product)",
+      "Bash(python manage.py init_sample_data)"
+    ]
+  }
+}

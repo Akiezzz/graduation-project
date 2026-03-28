@@ -1,0 +1,67 @@
+{% extends 'base_admin.html' %}
+{% block title %}店铺审核 · 管理后台{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <h2 style="margin:0">店铺审核</h2>
+  <a href="/manage/dashboard/" class="btn">← 返回后台</a>
+</div>
+
+{% if pending_stores %}
+<div class="section">
+  <h3 style="margin-bottom:16px;color:var(--orange)">待审核店铺（{{ pending_stores|length }}）</h3>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>店铺名称</th><th>申请人</th><th>联系人</th><th>联系电话</th><th>营业执照号</th><th>申请时间</th><th>操作</th></tr></thead>
+      <tbody>
+        {% for store in pending_stores %}
+        <tr>
+          <td><strong>{{ store.name }}</strong><br><small style="color:var(--text-3)">{{ store.description|truncatechars:30 }}</small></td>
+          <td>{{ store.owner.username }}</td>
+          <td>{{ store.contact_person }}</td>
+          <td>{{ store.contact_phone }}</td>
+          <td>{{ store.license_number }}</td>
+          <td>{{ store.created_at|date:"Y-m-d H:i" }}</td>
+          <td>
+            <form method="post" style="display:inline">{% csrf_token %}
+              <input type="hidden" name="store_id" value="{{ store.id }}">
+              <button type="submit" name="action" value="approve" class="btn btn-primary btn-sm">通过</button>
+              <button type="submit" name="action" value="reject" class="btn btn-sm" style="background:var(--red);color:#fff;border-color:var(--red)" onclick="return confirm('确定拒绝此申请？')">拒绝</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state" style="margin-bottom:24px"><p>暂无待审核的店铺申请 ✓</p></div>
+{% endif %}
+
+{% if active_stores %}
+<div class="section">
+  <h3 style="margin-bottom:16px">已开业店铺（{{ active_stores|length }}）</h3>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>店铺名称</th><th>店主</th><th>联系人</th><th>商品数</th><th>操作</th></tr></thead>
+      <tbody>
+        {% for store in active_stores %}
+        <tr>
+          <td><strong>{{ store.name }}</strong></td>
+          <td>{{ store.owner.username }}</td>
+          <td>{{ store.contact_person }}</td>
+          <td>{{ store.products.count }}</td>
+          <td>
+            <form method="post" style="display:inline">{% csrf_token %}
+              <input type="hidden" name="store_id" value="{{ store.id }}">
+              <button type="submit" name="action" value="disable" class="btn btn-sm" style="background:var(--red);color:#fff;border-color:var(--red)" onclick="return confirm('确定禁用此店铺？')">禁用</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

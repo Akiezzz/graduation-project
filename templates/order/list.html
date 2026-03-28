@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}我的订单 · 购物平台{% endblock %}
+{% block content %}
+<div class="page-header"><h1>我的订单</h1></div>
+{% if orders %}
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>订单号</th><th>状态</th><th>总价</th><th>下单时间</th><th>操作</th></tr></thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td style="font-weight:600;color:var(--text)">#{{ order.id }}</td>
+          <td>
+            <span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span>
+          </td>
+          <td style="color:var(--red);font-weight:600">¥{{ order.total_price }}</td>
+          <td style="color:var(--text-3)">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+          <td>
+            <a href="/order/orders/{{ order.id }}/" class="btn btn-sm">查看详情</a>
+            {% if order.status == 'pending' %}
+              <form method="post" action="/order/orders/{{ order.id }}/pay/" style="display:inline-block;margin-left:6px">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-primary">去支付</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">📦</div>
+  <p>还没有订单记录</p>
+  <a href="/products/" class="btn btn-primary">去购物</a>
+</div>
+{% endif %}
+{% endblock %}
